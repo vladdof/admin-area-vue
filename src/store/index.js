@@ -19,9 +19,23 @@ export default new Vuex.Store({
   },
   actions: {
     fetchCurrency: async () => {
-      const API_KEY = process.env.VUE_APP_FIXER
-      const res = await fetch(`https://financialmodelingprep.com/api/v3/quote/AAPL?apikey=${API_KEY}`)
-      return await res.json()
+      // const API_KEY = process.env.VUE_APP_FIXER
+      // const res = await fetch(`https://financialmodelingprep.com/api/v3/quote/AAPL?apikey=${API_KEY}`)
+      try {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD')
+        const data = await response.json()
+
+        return {
+          rates: {
+            USD: data.rates.USD,
+            EUR: data.rates.EUR,
+            RUB: data.rates.RUB
+          },
+          date: data.date
+        }
+      } catch (error) {
+        console.error('Ошибка при получении данных о валюте:', error)
+      }
     }
   },
   getters: {
