@@ -34,9 +34,22 @@ const firebaseConfig = {
 
 let app
 
-firebase.initializeApp(firebaseConfig)
-// для локальных пользователей
-firebase.auth().onAuthStateChanged(() => {
+try {
+  firebase.initializeApp(firebaseConfig)
+  // для локальных пользователей
+  firebase.auth().onAuthStateChanged(() => {
+    if (!app) {
+      app = new Vue({
+        router,
+        store,
+        render: h => h(App)
+      }).$mount('#app')
+    }
+  })
+} catch (error) {
+  console.error('Firebase initialization error:', error)
+
+  // Если Firebase не инициализируется, запускаем приложение без авторизации
   if (!app) {
     app = new Vue({
       router,
@@ -44,4 +57,4 @@ firebase.auth().onAuthStateChanged(() => {
       render: h => h(App)
     }).$mount('#app')
   }
-})
+}
