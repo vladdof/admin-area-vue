@@ -25,12 +25,16 @@ export default {
   }),
   computed: {
     base () {
-      return this.$store.getters.info.bill / (this.rates.RUB / this.rates.EUR)
+      const bill = this.$store.getters.info.bill
+
+      if (!bill || !this.rates.RUB || !this.rates.EUR) return 0
+      return bill / (this.rates.RUB / this.rates.EUR)
     }
   },
   methods: {
     getCurrency (currency) {
-      return Math.floor(this.base * this.rates[currency])
+      const currencyValue = this.base * this.rates[currency]
+      return Math.floor(currencyValue)
     }
   }
 }
