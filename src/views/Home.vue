@@ -4,7 +4,7 @@
       <h3>Счет</h3>
 
       <button
-        @click="refresh"
+        @click="fetchCurrency"
         class="btn waves-effect waves-light btn-small"
       >
         <i class="material-icons">refresh</i>
@@ -39,16 +39,20 @@ export default {
     HomeBill,
     HomeCurrency
   },
-  async mounted () {
-    this.currency = await this.$store.dispatch('fetchCurrency')
-    console.log(this.currency)
-    this.loading = false
+  created () {
+    this.fetchCurrency()
   },
   methods: {
-    async refresh () {
+    async fetchCurrency () {
       this.loading = true
-      this.currency = await this.$store.dispatch('fetchCurrency')
-      this.loading = false
+
+      try {
+        this.currency = await this.$store.dispatch('fetchCurrency')
+      } catch (error) {
+        console.error('Error fetching currency:', error)
+      } finally {
+        this.loading = false
+      }
     }
   }
 }
